@@ -1,0 +1,50 @@
+[2022-12-14 13:45:53.689691] [debug] request10
+    action: 'setSession'
+    login: ''
+    sessionId: 'UScebo8gVtVdnd-fW49crhr1PxICob7V'
+[2022-12-14 13:45:53.690068] [error] 
+[2022-12-14 13:45:57.585309] [error] <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ValidateSession ><sessionId>hsxaW_OT380O4ArlThTt4MH5_ux1NQpL</sessionId></ValidateSession></s:Body></s:Envelope>
+[2022-12-14 13:45:57.585439] [debug] xml
+    s:Envelope: array(
+        '#text' => '',
+        's:Body' => array(
+            0 => array(
+                '#text' => '',
+                'ValidateSession' => array(
+                    0 => array(
+                        '#text' => '',
+                        'sessionId' => array(
+                            0 => array(
+                                '#text' => 'hsxaW_OT380O4ArlThTt4MH5_ux1NQpL',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
+[2022-12-14 13:45:57.585807] [error] hsxaW_OT380O4ArlThTt4MH5_ux1NQpL
+[2022-12-14 13:45:57.586299] [error] <?xml version="1.0" encoding="UTF-8"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><ValidateSessionResponse xmlns="PyramidExternalAuth"><ValidateSessionResult>6234048337-9933</ValidateSessionResult></ValidateSessionResponse></s:Body></s:Envelope>
+
+[2022-12-14 13:45:57.640786] [error] <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><FindConsumer ><login>hsxaW_OT380O4ArlThTt4MH5_ux1NQpL</login></FindConsumer></s:Body></s:Envelope>
+[2022-12-14 13:45:57.640888] [debug] xml
+    s:Envelope: array(
+        '#text' => '',
+        's:Body' => array(
+            0 => array(
+                '#text' => '',
+                'FindConsumer' => array(
+                    0 => array(
+                        '#text' => '',
+                        'login' => array(
+                            0 => array(
+                                '#text' => 'hsxaW_OT380O4ArlThTt4MH5_ux1NQpL',
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
+[2022-12-14 13:45:57.641192] [error] 
