@@ -39,22 +39,19 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest
                 ? ['label' => 'Login', 'url' => ['/login']]
                 : '<li class="nav-item">'
                     . Html::beginForm(['/login/logout'])
                     . Html::submitButton(
-                        'Logout (' . Yii::$app->user->identity->name . ')',
+                        'Выйти (' . Yii::$app->user->identity->name . ')',
                         ['class' => 'nav-link btn btn-link logout']
                     )
                     . Html::endForm()
                     . '</li>',
 
             Yii::$app->user->identity->admin
-            ? ['label' => 'Admin', 'url' => ['/admin/']]
+            ? ['label' => 'Админка', 'url' => ['/admin/']]
             : '',
         ]
     ]);
@@ -65,7 +62,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
-            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
+            <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs'],'homeLink' => false]) ?>
         <?php endif ?>
         <?= Alert::widget() ?>
         <?= $content ?>

@@ -4,11 +4,13 @@ use yii\helpers\Html;
 
 /** @var yii\web\View $this */
 /** @var app\models\File $model */
+/** @var array $parents */
 
-$this->title = 'Update File: ' . $model->name;
-$this->params['breadcrumbs'][] = ['label' => 'Files', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = 'Update';
+$this->title = $model->name;
+foreach ($parents as $item){
+    $this->params['breadcrumbs'][] = ['label' => $item->name, 'url' => ['site/index', 'id' => $item->id]];
+}
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="file-update">
 

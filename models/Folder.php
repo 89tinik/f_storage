@@ -76,7 +76,7 @@ class Folder extends \yii\db\ActiveRecord
     {
         if ($this->load($data) && $this->save()) {
             $path = Folder::getPath($this->id);
-            mkdir($path . $this->id);
+            mkdir($path);
             return true;
         }
         return false;
@@ -85,20 +85,23 @@ class Folder extends \yii\db\ActiveRecord
     static function getPath(int $folderId, string $path = '')
     {
         $folderInstance = Folder::findOne($folderId);
+        $path = $folderId.'/'.$path ;
         if ($folderInstance->parent_id == 0) {
             return 'storage/' . $path;
         } else {
-            return Folder::getPath($folderInstance->parent_id, $folderInstance->parent_id . '/' . $path);
+            return Folder::getPath($folderInstance->parent_id,  $path);
         }
     }
 
     static function getParentsFolder(int $folderId, array $parents = [])
     {
         $folderInstance = Folder::findOne($folderId);
+        if($folderInstance){
+            $parents[] = $folderInstance;
+        }
         if ($folderInstance->parent_id == 0) {
             return $parents;
         } else {
-            $parents[] = $folderInstance;
             return Folder::getParentsFolder($folderInstance->parent_id, $parents);
         }
     }
@@ -106,7 +109,7 @@ class Folder extends \yii\db\ActiveRecord
     public function checkUser($attribute)
     {
         if (!$this->hasErrors()) {
-            if ($this->user_id != Yii::$app->user->id) {
+            if ($this->user_id != Yii::$app->user->id && isset(Yii::$app->user->id)) {
                 $this->addError($attribute, 'Не верный пользователь');
             }
         }
@@ -117,7 +120,7 @@ class Folder extends \yii\db\ActiveRecord
         if (!$this->hasErrors()) {
             $parentFolder = Folder::findOne($this->parent_id);
 
-            if ($parentFolder->user_id != Yii::$app->user->id) {
+            if ($parentFolder->user_id != Yii::$app->user->id && !is_null($parentFolder)) {
                 $this->addError($attribute, 'Вы не можете создать папку в этой дериктории!');
             }
         }

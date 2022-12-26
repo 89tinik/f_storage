@@ -1,0 +1,18 @@
+.file-small-style.active {
+    border: 2px solid #0d6efd;
+    border-radius:5px;
+}
+
+/*.folder{*/
+/*    position: relative;*/
+/*}*/
+/*.folder .menu-folder{*/
+/*    content:'';*/
+/*    background: url('../images/icon/menu-down.svg') 0 0 no-repeat;*/
+/*    position: absolute;*/
+/*    top:0;*/
+/*    left:0;*/
+/*    width: 15px;*/
+/*    height: 15px;*/
+/*    cursor: pointer;*/
+/*}*/

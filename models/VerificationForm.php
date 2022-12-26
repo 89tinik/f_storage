@@ -42,7 +42,6 @@ class VerificationForm extends Model
     {
 
         if ($this->validate()) {
-
             $user = User::findOne(['id' => Yii::$app->session->get('uId')]);
             return $user->activation();
         }

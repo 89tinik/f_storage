@@ -16,11 +16,11 @@ class m221214_114857_create_file_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(255),
             'path' => $this->string(255),
-            'public_link' => $this->string(255),
+            'public_link' => $this->integer()->defaultValue(0),
             'size' => $this->integer(),
             'created' => $this->date(),
             'parent_id' => $this->integer(),
-            'type' => $this->integer(),
+            'thumb' => $this->string(255),
             'user_id' => $this->integer(),
         ], 'CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE=InnoDB');
 
@@ -37,6 +37,23 @@ class m221214_114857_create_file_table extends Migration
             '{{%file}}',
             'user_id',
             'user',
+            'id',
+            'CASCADE'
+        );
+
+        // creates index for column `parent_id`
+        $this->createIndex(
+            'idx-file-parent_id',
+            '{{%file}}',
+            'parent_id'
+        );
+
+        // add foreign key for table `folder`
+        $this->addForeignKey(
+            'fk-file-parent_id',
+            '{{%file}}',
+            'parent_id',
+            'folder',
             'id',
             'CASCADE'
         );

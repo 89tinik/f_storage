@@ -14,16 +14,17 @@ use Yii;
  * @property int|null $size
  * @property string|null $created
  * @property int|null $parent_id
- * @property int|null $type
+ * @property int|null $thumb
  * @property int|null $user_id
  *
  * @property User $user
  */
 class File extends \yii\db\ActiveRecord
 {
-    const DEF = 1;
-    const WORD = 2;
-    const IMAGE = 3;
+    const THUMB = [
+        'word' => '/images/icon/word.png',
+        'default' => '/images/icon/default.png'
+    ];
 
     /**
      * {@inheritdoc}
@@ -39,9 +40,9 @@ class File extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['size', 'parent_id', 'type', 'user_id'], 'integer'],
+            [['size', 'parent_id', 'user_id', 'public_link'], 'integer'],
             [['created'], 'safe'],
-            [['name', 'path', 'public_link'], 'string', 'max' => 255],
+            [['name', 'path', 'thumb'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -59,7 +60,7 @@ class File extends \yii\db\ActiveRecord
             'size' => 'Size',
             'created' => 'Created',
             'parent_id' => 'Parent ID',
-            'type' => 'Type',
+            'thumb' => 'Thumb',
             'user_id' => 'User ID',
         ];
     }
@@ -74,20 +75,25 @@ class File extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    public function setTypeFyle($extention)
+    /**
+     * @param string $extention
+     * @return void
+     */
+    public function setThumbFile(string $extention)
     {
+        $thumbArray = self::THUMB;
         switch ($extention) {
             case 'png':
             case 'jpg':
             case 'jpeg':
-                $this->type = self::IMAGE;
+                $this->thumb = '/' . $this->generateThumbImage($this->path, $extention);
                 break;
             case 'doc':
             case 'docx':
-                $this->type = self::WORD;
+                $this->thumb = $thumbArray['word'];
                 break;
             default:
-                $this->type = self::DEF;
+                $this->thumb = $thumbArray['default'];
         }
 
     }
@@ -103,12 +109,93 @@ class File extends \yii\db\ActiveRecord
     }
 
     /**
-     * Gets query for [[Type0]].
-     *
-     * @return \yii\db\ActiveQuery
+     * @param $path
+     * @param $extention
+     * @return string|void
      */
-    public function getType0()
+    public function generateThumbImage($path, $extention)
     {
-        return $this->hasOne(Type::class, ['id' => 'type']);
+        //здесь можно сжимать первью картинки для экономия места
+        $pathArray = explode('/', $path);
+        $imageName = array_pop($pathArray) . '.' . $extention;
+        $pathArray[0] = 'images/thumbs';
+        $thumbPath = implode('/', $pathArray);
+        if (!file_exists($thumbPath)) {
+            mkdir($thumbPath, 0755, true);
+        }
+        $to = $thumbPath . '/' . $imageName;
+        if (copy($path, $to)) {
+            return $to;
+        }
+    }
+
+    /**
+     * @return void
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function deleteFile()
+    {
+        unlink($this->path);
+        if (!in_array($this->thumb, self::THUMB)) {
+            unlink(substr($this->thumb,1));
+        }
+        $this->user->storage_size = $this->user->storage_size - $this->size;
+        $this->user->save(false);
+        $this->delete();
+    }
+
+    /**
+     * @return void
+     */
+    public function addSessionDownload()
+    {
+        $session = Yii::$app->session;
+        $downloads = [];
+        if ($session->has('downloads')) {
+            $downloads = $session->get('downloads');
+        }
+        if (!in_array($this->path, $downloads)) {
+            $downloads[] = $this->path;
+        }
+        $session['downloads'] = $downloads;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkDownload()
+    {
+        $session = Yii::$app->session;
+        if ($session->has('downloads')) {
+            $downloads = $session->get('downloads');
+            if (in_array($this->path, $downloads)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return void
+     */
+    public function changeShare()
+    {
+        $this->public_link = ($this->public_link) ? 0 : 1;
+        $this->save();
+    }
+
+    /**
+     * @return string
+     */
+    public function formatFileSize() {
+        $size = $this->size;
+        $a = array("B", "KB", "MB", "GB", "TB", "PB");
+        $pos = 0;
+        while ($size >= 1024) {
+            $size /= 1024;
+            $pos++;
+        }
+        return round($size,2)." ".$a[$pos];
     }
 }

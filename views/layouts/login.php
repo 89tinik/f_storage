@@ -40,9 +40,9 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav'],
         'items' => [
-            ['label' => 'Login', 'url' => ['/login/index']],
-            ['label' => 'Registration', 'url' => ['/login/registration']],
-            ['label' => 'Forgot password', 'url' => ['/login/repassword']],
+            ['label' => 'Войти', 'url' => ['/login/index']],
+            ['label' => 'Регистрация', 'url' => ['/login/registration']],
+            ['label' => 'Восстановление пароля', 'url' => ['/login/repassword']],
         ]
     ]);
     NavBar::end();

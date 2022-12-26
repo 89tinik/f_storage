@@ -54,11 +54,11 @@ class User extends ActiveRecord implements IdentityInterface
             'name' => 'Имя',
             'email' => 'Email',
             'password' => 'Пароль',
-            'max_size_storage' => 'Максимальный размер хранилища',
-            'max_file_size' => 'Максимальный размер файла',
+            'max_size_storage' => 'Максимальный размер хранилища(MB)',
+            'max_file_size' => 'Максимальный размер файла(MB)',
             'blocked' => 'Заблокирован',
             'admin' => 'Администратор',
-            'storage_size' => 'Занятое место хранилища',
+            'storage_size' => 'Занятое место хранилища(B)',
         ];
     }
 
